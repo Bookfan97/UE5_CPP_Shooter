@@ -27,6 +27,32 @@ void AShooterCharacter::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AShooterCharacter::MoveForward(float value)
+{
+	if ((Controller != nullptr) && value != 0)
+	{
+		//Check forward rotation
+		const FRotator Rotation {Controller->GetControlRotation()};
+		const FRotator YawRotation {0, Rotation.Yaw, 0};
+
+		const FVector Direction{ FRotationMatrix{YawRotation}.GetUnitAxis(EAxis::X)};
+		AddMovementInput(Direction, value);
+	}
+}
+
+void AShooterCharacter::MoveRight(float value)
+{
+	if ((Controller != nullptr) && value != 0)
+	{
+		//Check forward rotation
+		const FRotator Rotation {Controller->GetControlRotation()};
+		const FRotator YawRotation {0, Rotation.Yaw, 0};
+
+		const FVector Direction{ FRotationMatrix{YawRotation}.GetUnitAxis(EAxis::Y)};
+		AddMovementInput(Direction, value);
+	}
+}
+
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -38,6 +64,9 @@ void AShooterCharacter::Tick(float DeltaTime)
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	check(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
 }
 
