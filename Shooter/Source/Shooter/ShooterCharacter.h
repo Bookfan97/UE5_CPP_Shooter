@@ -28,7 +28,17 @@ protected:
 
 	/*Left/Right Input*/
 	void MoveRight(float value);
-public:	
+
+	/* Called via input to turn at a given rate
+	 * @param Rate normalize rate
+	 */
+	void TurnAtRate(float rate);
+
+	/* Called via input to look up/down at a given rate
+	 * @param Rate normalize rate
+	 */
+	void LookUpAtRate(float rate);
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -37,16 +47,24 @@ public:
 
 private:
 	/*Camera boom positions camera behind the character*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* CameraBoom;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		USpringArmComponent* CameraBoom;
 
 	/*Camera that follows the character*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		UCameraComponent* FollowCamera;
+
+	/*Base turn rate in degrees/second */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		float BaseTurnRate;
+
+	/*Base look up/down rate in degrees/second */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		float BaseLookUpRate;
 public:
 	/*Returns camera boom subobject*/
-	FORCEINLINE USpringArmComponent* GetCameraBoom() const {return CameraBoom;}
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	/*Returns follow camera subobject*/
-	FORCEINLINE UCameraComponent* GetFollowCamera() const {return FollowCamera;}
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
