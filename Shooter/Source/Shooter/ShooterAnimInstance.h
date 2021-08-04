@@ -16,10 +16,10 @@ class SHOOTER_API UShooterAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 	public:
+	
 	UFUNCTION(BlueprintCallable)
 	void UpdateAnimationProperties(float DeltaTime);
 
-	
 	virtual void NativeInitializeAnimation() override;
 
 	private:
