@@ -38,4 +38,8 @@ class SHOOTER_API UShooterAnimInstance : public UAnimInstance
 	/*Check whether the character is accelerating*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Movement, meta=(AllowPrivateAccess="true"))
 	bool bIsAccelerating;
+
+	/*Offset yaw used for strafing*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Movement, meta=(AllowPrivateAccess="true"))
+	float MovementOffsetYaw;
 };
