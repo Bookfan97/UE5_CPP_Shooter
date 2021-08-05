@@ -3,6 +3,7 @@
 
 #include "ShooterCharacter.h"
 
+#include "DrawDebugHelpers.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -84,11 +85,13 @@ void AShooterCharacter::LookUpAtRate(float rate)
 
 void AShooterCharacter::FireWeapon()
 {
+	/*Play Fire Sound Effect*/
 	if (FireSound)
 	{
 		UGameplayStatics::PlaySound2D(this, FireSound);
 	}
 
+	/*Bullet Particle Effect*/
 	const USkeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("BarrelSocket");
 	if (BarrelSocket)
 	{
@@ -97,7 +100,22 @@ void AShooterCharacter::FireWeapon()
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
 		}
+		
+		/*Line Trace Bullet*/
+		FHitResult FireHit;
+		const FVector Start{SocketTransform.GetLocation()};
+		const FQuat Rotation{SocketTransform.GetRotation()};
+		const FVector RotationAxis{Rotation.GetAxisX()};
+		const FVector End{Start + RotationAxis * 50'000.f};
+		GetWorld()->LineTraceSingleByChannel(FireHit, Start, End,  ECollisionChannel::ECC_Visibility);
+		if (FireHit.bBlockingHit)
+		{
+			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
+			DrawDebugPoint(GetWorld(), FireHit.Location, 10, FColor::Red, false, 2.f);
+		}
 	}
+
+	/*Play Shooting Animation*/
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && HipFireMontage)
 	{
