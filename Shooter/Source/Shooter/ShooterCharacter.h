@@ -44,6 +44,10 @@ protected:
 
 	/**/
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+
+	/*Set bAiming to true or false*/
+	void AimingButtonPressed();
+	void AimingButtonReleased();
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -87,6 +91,16 @@ private:
 	/*Particles for Smoke Trail*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* BeamParticles;
+	
+	/*True when aiming*/
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	bool bAiming;
+
+	/*Default camera field of view value*/
+	float CameraDefaultFOV;
+
+	/*Zoomed camera field of view value*/
+	float CameraZoomedFOV;
 	
 public:
 	/*Returns camera boom subobject*/
