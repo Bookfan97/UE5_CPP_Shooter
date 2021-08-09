@@ -48,6 +48,7 @@ protected:
 	/*Set bAiming to true or false*/
 	void AimingButtonPressed();
 	void AimingButtonReleased();
+	void CameraInterpZoom(float DeltaTime);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -101,6 +102,13 @@ private:
 
 	/*Zoomed camera field of view value*/
 	float CameraZoomedFOV;
+	
+	/*Current Field of View for frame*/
+	float CameraCurrentFOV;
+
+	/*Interp speed for zooming and aiming*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	float ZoomInterpSpeed;
 	
 public:
 	/*Returns camera boom subobject*/
