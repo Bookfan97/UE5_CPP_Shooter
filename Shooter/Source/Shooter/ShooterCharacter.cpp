@@ -287,6 +287,18 @@ void AShooterCharacter::SetLookRate()
 	}
 }
 
+void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
+{
+	FVector2D WalkSpeedRange{0.f, 600.f};
+	FVector2D VelocityMultiplierRange {0.1f, 1.0f};
+	FVector Velocity{GetVelocity()};
+	Velocity.Z = 0;
+	CrosshairVelocityFactor = FMath::GetMappedRangeValueClamped(
+		WalkSpeedRange, VelocityMultiplierRange, Velocity.Size()
+		);
+	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor;
+}
+
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -297,6 +309,9 @@ void AShooterCharacter::Tick(float DeltaTime)
 
 	//Set look and turn rates based on aiming
 	SetLookRate();
+
+	//Calculate the crosshair spread multiplier
+	CalculateCrosshairSpread(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -317,5 +332,10 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("FireButton", IE_Released, this, &AShooterCharacter::FireWeapon);
 	PlayerInputComponent->BindAction("AimingButton", IE_Pressed, this, &AShooterCharacter::AimingButtonPressed);
 	PlayerInputComponent->BindAction("AimingButton", IE_Released, this, &AShooterCharacter::AimingButtonReleased);
+}
+
+float AShooterCharacter::GetCrosshairSpreadMultiplier()
+{
+	return CrosshairSpreadMultiplier;
 }
 
