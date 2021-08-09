@@ -116,4 +116,7 @@ public:
 
 	/*Returns follow camera subobject*/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	/*Returns bAiming to be used in the anim instance*/
+	FORCEINLINE bool GetAiming() const {return bAiming;}
 };

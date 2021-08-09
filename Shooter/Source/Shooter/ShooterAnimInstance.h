@@ -46,4 +46,8 @@ class SHOOTER_API UShooterAnimInstance : public UAnimInstance
 	/** Offset yaw the frame before we stopped moving */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float LastMovementOffsetYaw;
+
+	/** Bool for aiming */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	bool bAiming;
 };
