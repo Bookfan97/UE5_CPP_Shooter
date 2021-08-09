@@ -39,6 +39,16 @@ protected:
 	 */
 	void LookUpAtRate(float rate);
 
+	/* Rotate controller based on mouse X movement
+	 * @param Value Input value for mouse movement
+	 */
+	void Turn(float value);
+
+	/* Rotate controller based on mouse Y movement
+	* @param Value Input value for mouse movement
+	*/
+	void LookUp(float value);
+	
 	/*Called when fire button is pressed*/
 	void FireWeapon();
 
@@ -49,6 +59,7 @@ protected:
 	void AimingButtonPressed();
 	void AimingButtonReleased();
 	void CameraInterpZoom(float DeltaTime);
+	void SetLookRate();
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -72,6 +83,38 @@ private:
 	/*Base look up/down rate in degrees/second */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		float BaseLookUpRate;
+
+	/*Base turn rate in degrees/second while not aiming*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		float HipTurnRate;
+
+	/*Base look up/down rate in degrees/second while not aiming*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		float HipLookUpRate;
+
+	/*Base turn rate in degrees/second while aiming*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		float AimTurnRate;
+
+	/*Base look up/down rate in degrees/second while aiming*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		float AimLookUpRate;
+
+	/*Base turn rate in degrees/second while not aiming*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0"), meta = (ClampMax = "1.0"), meta = (UIMin = "0.0"), meta = (UIMax = "1.0"))
+		float MouseHipTurnRate;
+
+	/*Base look up/down rate in degrees/second while not aiming*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0"), meta = (ClampMax = "1.0"), meta = (UIMin = "0.0"), meta = (UIMax = "1.0"))
+		float MouseHipLookUpRate;
+
+	/*Base turn rate in degrees/second while aiming*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0"), meta = (ClampMax = "1.0"), meta = (UIMin = "0.0"), meta = (UIMax = "1.0"))
+		float MouseAimTurnRate;
+
+	/*Base look up/down rate in degrees/second while aiming*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0"), meta = (ClampMax = "1.0"), meta = (UIMin = "0.0"), meta = (UIMax = "1.0"))
+		float MouseAimLookUpRate;
 
 	/*Gun fire sound cue*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
