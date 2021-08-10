@@ -31,6 +31,10 @@ private:
 	/*Line trace collides with box to show HUD Widgets*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item Properties", meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* CollisionBox;
+
+	/*Popup widget for when player looks at the item*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item Properties", meta = (AllowPrivateAccess = "true"))
+	class UWidgetComponent* PickupWidget;
 public:	
 
 };
