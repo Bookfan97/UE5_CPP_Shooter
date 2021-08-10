@@ -70,6 +70,20 @@ protected:
 	/**/
 	UFUNCTION()
 	void FinishCrosshairBulletFire();
+
+	/**/
+	void FireButtonPressed();
+
+	/**/
+	void FireButtonReleased();
+
+	/**/
+	void StartFireTimer();
+
+	/**/
+	UFUNCTION()
+	void AutoFireReset();
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -188,7 +202,19 @@ private:
 	bool bFiringBullet;
 
 	FTimerHandle CrosshairShootTimer;
-	
+
+	/*LMB or Right Console Trigger pressed*/
+	bool bFireButtonPressed;
+
+	/*True when player can fire, false when waiting for the timer*/
+	bool bShouldFire;
+
+	/*Rate of automatic fire*/
+	float AutomaticFireRate;
+
+	/*Sets a timer between gunshots*/
+	FTimerHandle AutoFireTimer;
+
 public:
 	/*Returns camera boom subobject*/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
