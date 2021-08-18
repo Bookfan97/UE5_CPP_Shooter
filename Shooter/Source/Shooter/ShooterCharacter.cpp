@@ -5,6 +5,7 @@
 
 #include "DrawDebugHelpers.h"
 #include "Item.h"
+#include "Weapon.h"
 #include "Components/WidgetComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -77,6 +78,7 @@ void AShooterCharacter::BeginPlay()
 		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
 		CameraCurrentFOV = CameraDefaultFOV;
 	}
+	SpawnDefaultWeapon();
 }
 
 void AShooterCharacter::MoveForward(float value)
@@ -441,6 +443,27 @@ void AShooterCharacter::TraceForItems()
 	else if(TraceHitItemLastFrame)
 	{
 		TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
+	}
+}
+
+void AShooterCharacter::SpawnDefaultWeapon()
+{
+	//Check the TSubclassof variable
+	if (DefaultWeaponClass)
+	{
+		//Spawn weapon
+		AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
+
+		//Get socket
+		const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(FName("RightHandSocket"));
+
+		//Attach weapon to hand socket
+		if (HandSocket)
+		{
+			HandSocket->AttachActor(DefaultWeapon, GetMesh());
+		}
+		
+		EquippedWeapon = DefaultWeapon;
 	}
 }
 
