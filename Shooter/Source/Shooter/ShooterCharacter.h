@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Weapon.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
@@ -87,7 +88,8 @@ protected:
 	/*Line trace for items under the crosshairs*/
 	bool TraceUnderCrosshairs(FHitResult& OutHitResult, FVector& OutHitLocation);
 	void TraceForItems();
-	void SpawnDefaultWeapon();
+	AWeapon* SpawnDefaultWeapon();
+	void EquipWeapon(AWeapon* WeaponToEquip);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
