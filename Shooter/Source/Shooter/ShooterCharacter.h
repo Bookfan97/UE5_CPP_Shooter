@@ -224,6 +224,9 @@ private:
 	/*Number of overlapped AItems*/
 	int8 OverlappedItemCount;
 
+	/*AItem hit last frame*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Items, meta = (AllowPrivateAccess = "true"))
+	class AItem* TraceHitItemLastFrame;
 public:
 	/*Returns camera boom subobject*/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
