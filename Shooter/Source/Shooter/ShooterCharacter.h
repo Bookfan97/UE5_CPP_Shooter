@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Weapon.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
@@ -83,7 +84,21 @@ protected:
 	/**/
 	UFUNCTION()
 	void AutoFireReset();
-	
+
+	/*Line trace for items under the crosshairs*/
+	bool TraceUnderCrosshairs(FHitResult& OutHitResult, FVector& OutHitLocation);
+	void TraceForItems();
+	AWeapon* SpawnDefaultWeapon();
+	void EquipWeapon(AWeapon* WeaponToEquip);
+
+	/*Detach Weapon and let it fall to the ground*/
+	void DropWeapon();
+
+	void SelectButtonPressed();
+	void SelectButtonReleased();
+
+	/*Drops current weapon and equips item traced*/
+	void SwapWeapon(AWeapon* WeaponToSwap);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -215,6 +230,28 @@ private:
 	/*Sets a timer between gunshots*/
 	FTimerHandle AutoFireTimer;
 
+	/*True if should trace every frame for item*/
+	bool bShouldTraceForItems;
+
+	/*Number of overlapped AItems*/
+	int8 OverlappedItemCount;
+
+	/*AItem hit last frame*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Items, meta = (AllowPrivateAccess = "true"))
+	class AItem* TraceHitItemLastFrame;
+
+	/*Currently equipped weapon*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Combat, meta = (AllowPrivateAccess = "true"))
+	class AWeapon* EquippedWeapon;
+
+	/** Set this in Blueprints for the default Weapon class */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWeapon> DefaultWeaponClass;
+
+	/*The item currently hit by our trace in TraceForItems*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	AItem* TraceHitItem;
+	
 public:
 	/*Returns camera boom subobject*/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -228,4 +265,9 @@ public:
 	/*Returns bAiming to be used in the anim instance*/
 	UFUNCTION(BlueprintCallable)
 	float GetCrosshairSpreadMultiplier();
+
+	FORCEINLINE int8 GetOverlappedItemCounts() const {return OverlappedItemCount;}
+
+	/*Add/Subtract overlapped item count and updates bShouldTraceForItems*/
+	void IncrementOverlappedItemCount(int8 amount);
 };
