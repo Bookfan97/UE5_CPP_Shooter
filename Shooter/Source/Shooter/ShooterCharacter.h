@@ -90,6 +90,12 @@ protected:
 	void TraceForItems();
 	AWeapon* SpawnDefaultWeapon();
 	void EquipWeapon(AWeapon* WeaponToEquip);
+
+	/*Detach Weapon and let it fall to the ground*/
+	void DropWeapon();
+
+	void SelectButtonPressed();
+	void SelectButtonReleased();
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
