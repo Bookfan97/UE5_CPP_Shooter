@@ -42,7 +42,9 @@ bFiringBullet(false),
 AutomaticFireRate(0.1f),
 bShouldFire(true),
 bFireButtonPressed(false),
-bShouldTraceForItems(false)
+bShouldTraceForItems(false),
+CameraInterpDistance(250.f),
+CameraInterpElevation(65.f)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -569,5 +571,12 @@ void AShooterCharacter::IncrementOverlappedItemCount(int8 amount)
 		OverlappedItemCount += amount;
 		bShouldTraceForItems = true;
 	}
+}
+
+FVector AShooterCharacter::GetCameraInterpLocation()
+{
+	const FVector CameraWorldLocation{FollowCamera->GetComponentLocation()};
+	const FVector CameraForward{FollowCamera->GetForwardVector()};
+	return CameraWorldLocation + CameraForward * CameraInterpDistance + FVector(0.f, 0.f, CameraInterpElevation);
 }
 

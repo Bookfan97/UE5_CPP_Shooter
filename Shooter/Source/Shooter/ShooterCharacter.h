@@ -251,7 +251,14 @@ private:
 	/*The item currently hit by our trace in TraceForItems*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	AItem* TraceHitItem;
-	
+
+	/*Distance outward from the camera for interp distance*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Items, meta = (AllowPrivateAccess = "true"))
+	float CameraInterpDistance;
+
+	/*Distance up from the camera for interp distance*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Items, meta = (AllowPrivateAccess = "true"))
+	float CameraInterpElevation;
 public:
 	/*Returns camera boom subobject*/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -270,4 +277,6 @@ public:
 
 	/*Add/Subtract overlapped item count and updates bShouldTraceForItems*/
 	void IncrementOverlappedItemCount(int8 amount);
+
+	FVector GetCameraInterpLocation();
 };
