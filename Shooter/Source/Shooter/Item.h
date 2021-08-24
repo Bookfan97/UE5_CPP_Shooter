@@ -58,6 +58,8 @@ protected:
 	void SetItemProperties(EItemState State);
 
 	void FinishInterping();
+
+	void ItemInterp(float DeltaTime);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
