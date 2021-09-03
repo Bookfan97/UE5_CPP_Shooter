@@ -20,7 +20,8 @@ ItemInterpStartLocation(FVector(0.f)),
 CameraTargetLocation(FVector(0.f)),
 bInterping(false),
 ItemInterpX(0.f),
-ItemInterpY(0.f)
+ItemInterpY(0.f),
+InterpInitialYawOffset(0.f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -235,6 +236,10 @@ void AItem::ItemInterp(float DeltaTime)
 		// Adding curve value to the Z component of the Initial Location (scaled by DeltaZ)
 		ItemLocation.Z += CurveValue * DeltaZ;
 		SetActorLocation(ItemLocation, true, nullptr, ETeleportType::TeleportPhysics);
+
+		const FRotator CameraRotation{Character->GetFollowCamera()->GetComponentRotation()};
+		FRotator ItemRotation{0.f, CameraRotation.Yaw + InterpInitialYawOffset, 0.f};
+		SetActorRotation(ItemRotation, ETeleportType::TeleportPhysics);
 	}
 }
 
@@ -258,5 +263,12 @@ void AItem::StartItemCurve(AShooterCharacter* Char)
 	bInterping = true;
 	SetItemState(EItemState::EIS_EquipInterping);
 	GetWorldTimerManager().SetTimer(ItemInterpTimer, this, &AItem::FinishInterping, ZCurveTime);
+
+	//Get Inital yaw of camera and the item
+	const float CameraRotationYaw{Character->GetFollowCamera()->GetComponentRotation().Yaw};
+	const float ItemRotationYaw{GetActorRotation().Yaw};
+
+	//Inital Yaw offset between the camera and the item
+	InterpInitialYawOffset = ItemRotationYaw - CameraRotationYaw;
 }
 
