@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Weapon.h"
 
 AWeapon::AWeapon() :
 	ThrowWeaponTime(0.7f),
-	bFalling(false)
+	bFalling(false),
+	ammo(0)
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -39,11 +39,22 @@ void AWeapon::ThrowWeapon()
 
 	bFalling = true;
 	GetWorldTimerManager().SetTimer(
-		ThrowWeaponTimer, 
-		this, 
-		&AWeapon::StopFalling, 
+		ThrowWeaponTimer,
+		this,
+		&AWeapon::StopFalling,
 		ThrowWeaponTime);
+}
 
+void AWeapon::DecrementAmmo()
+{
+	if (ammo -1 <=0)
+	{
+		ammo = 0;
+	}
+	else
+	{
+		ammo--;
+	}
 }
 
 void AWeapon::StopFalling()

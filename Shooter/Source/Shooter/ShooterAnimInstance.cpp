@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ShooterAnimInstance.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
@@ -10,12 +9,12 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
 {
 	if (ShooterCharacter == nullptr)
 	{
-		ShooterCharacter =  Cast<AShooterCharacter>(TryGetPawnOwner());
+		ShooterCharacter = Cast<AShooterCharacter>(TryGetPawnOwner());
 	}
 	if (ShooterCharacter)
 	{
 		//Get the speed from the characters velocity
-		FVector Velocity{ShooterCharacter->GetVelocity()};
+		FVector Velocity{ ShooterCharacter->GetVelocity() };
 		Velocity.Z = 0;
 		Speed = Velocity.Size();
 
@@ -47,10 +46,10 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
 		}
 
 		bAiming = ShooterCharacter->GetAiming();
-	}	
+	}
 }
 
 void UShooterAnimInstance::NativeInitializeAnimation()
 {
-	ShooterCharacter =  Cast<AShooterCharacter>(TryGetPawnOwner());
+	ShooterCharacter = Cast<AShooterCharacter>(TryGetPawnOwner());
 }

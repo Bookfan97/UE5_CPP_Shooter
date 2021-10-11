@@ -34,8 +34,8 @@ UCLASS()
 class SHOOTER_API AItem : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AItem();
 
@@ -45,11 +45,11 @@ protected:
 
 	/** Called when overlapping AreaSphere */
 	UFUNCTION()
-	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	/** Called when End Overlapping AreaSphere */
 	UFUNCTION()
-	void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+		void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	/*Sets active stars array based on rarity*/
 	void SetActiveStars();
@@ -60,67 +60,67 @@ protected:
 	void FinishInterping();
 
 	void ItemInterp(float DeltaTime);
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 private:
 	/*Skeletal Mesh for the item*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item Properties", meta = (AllowPrivateAccess = "true"))
-	USkeletalMeshComponent* ItemMesh;
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		USkeletalMeshComponent* ItemMesh;
+
 	/*Line trace collides with box to show HUD Widgets*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item Properties", meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* CollisionBox;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		class UBoxComponent* CollisionBox;
 
 	/** Popup widget for when the player looks at the item */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	class UWidgetComponent* PickupWidget;
+		class UWidgetComponent* PickupWidget;
 
 	/*Enables Item tracing when overlapped*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	class USphereComponent* AreaSphere;
+		class USphereComponent* AreaSphere;
 
 	/*Name which appears on the PickupWidget*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	FString ItemName;
+		FString ItemName;
 
 	/*Item Count which appears on the PickupWidget*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	int32 ItemCount;
+		int32 ItemCount;
 
 	/*Item Rarity determines num stars which appears on the PickupWidget*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	EItemRarity ItemRarity;
+		EItemRarity ItemRarity;
 
 	/*Item Rarity determines num stars which appears on the PickupWidget*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	TArray<bool> ActiveStars;
+		TArray<bool> ActiveStars;
 
 	/*State of the Item*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	EItemState ItemState;
+		EItemState ItemState;
 
 	/*Curve asset to use for the item's z location while interp*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	class UCurveFloat* ItemZCurve;
+		class UCurveFloat* ItemZCurve;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	FVector ItemInterpStartLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		FVector ItemInterpStartLocation;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	FVector CameraTargetLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		FVector CameraTargetLocation;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	bool bInterping;
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		bool bInterping;
+
 	FTimerHandle ItemInterpTimer;
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	float ZCurveTime;
-	
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	class AShooterCharacter* Character;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		float ZCurveTime;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		class AShooterCharacter* Character;
 
 	float ItemInterpX;
 	float ItemInterpY;
@@ -129,14 +129,14 @@ private:
 	float InterpInitialYawOffset;
 
 	/*Curve used to scale the item when interp*/
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	UCurveFloat* ItemScaleCurve;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		UCurveFloat* ItemScaleCurve;
 public:
-	FORCEINLINE UWidgetComponent* GetPickupWidget() const {return PickupWidget;}
-	FORCEINLINE USphereComponent* GetAreaSphere() const {return AreaSphere;}
-	FORCEINLINE UBoxComponent* GetCollisionBox() const {return CollisionBox;}
-	FORCEINLINE EItemState GetItemState() const {return ItemState;}
+	FORCEINLINE UWidgetComponent* GetPickupWidget() const { return PickupWidget; }
+	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
+	FORCEINLINE UBoxComponent* GetCollisionBox() const { return CollisionBox; }
+	FORCEINLINE EItemState GetItemState() const { return ItemState; }
 	void SetItemState(EItemState State);
-	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const {return ItemMesh;}
+	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; }
 	void StartItemCurve(AShooterCharacter* Character);
 };

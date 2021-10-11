@@ -12,7 +12,7 @@
 #include "ShooterCharacter.generated.h"
 
 UENUM(BlueprintType)
-enum class EAmmoType: uint8
+enum class EAmmoType : uint8
 {
 	EAT_9mm UMETA(DisplayName = "9mm"),
 	EAT_AR UMETA(DisplayName = "Assault Rifle"),
@@ -57,7 +57,7 @@ protected:
 	* @param Value Input value for mouse movement
 	*/
 	void LookUp(float value);
-	
+
 	/*Called when fire button is pressed*/
 	void FireWeapon();
 
@@ -75,10 +75,10 @@ protected:
 
 	/**/
 	void StartCrosshairBulletFire();
-	
+
 	/**/
 	UFUNCTION()
-	void FinishCrosshairBulletFire();
+		void FinishCrosshairBulletFire();
 
 	/**/
 	void FireButtonPressed();
@@ -91,7 +91,7 @@ protected:
 
 	/**/
 	UFUNCTION()
-	void AutoFireReset();
+		void AutoFireReset();
 
 	/*Line trace for items under the crosshairs*/
 	bool TraceUnderCrosshairs(FHitResult& OutHitResult, FVector& OutHitLocation);
@@ -110,6 +110,9 @@ protected:
 
 	/*Initialize the ammo map with values*/
 	void InitializeAmmoMap();
+
+	/*Checks to see if weapon has ammo*/
+	bool WeaponHasAmmo();
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -168,60 +171,60 @@ private:
 
 	/*Gun fire sound cue*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	class USoundCue* FireSound;
+		class USoundCue* FireSound;
 
 	/*Flash spawned at BarrelSocket*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	class UParticleSystem* MuzzleFlash;
+		class UParticleSystem* MuzzleFlash;
 
 	/*Montage for firing weapon*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	class UAnimMontage* HipFireMontage;
+		class UAnimMontage* HipFireMontage;
 
 	/*Particles spawned on impact*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* ImpactParticles;
+		UParticleSystem* ImpactParticles;
 
 	/*Particles for Smoke Trail*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* BeamParticles;
-	
+		UParticleSystem* BeamParticles;
+
 	/*True when aiming*/
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	bool bAiming;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+		bool bAiming;
 
 	/*Default camera field of view value*/
 	float CameraDefaultFOV;
 
 	/*Zoomed camera field of view value*/
 	float CameraZoomedFOV;
-	
+
 	/*Current Field of View for frame*/
 	float CameraCurrentFOV;
 
 	/*Interp speed for zooming and aiming*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	float ZoomInterpSpeed;
+		float ZoomInterpSpeed;
 
 	/*Determines the spread of the crosshairs*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Crosshairs, meta = (AllowPrivateAccess = "true"))
-	float CrosshairSpreadMultiplier;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"))
+		float CrosshairSpreadMultiplier;
 
 	/*Velocity component for crosshair spread*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Crosshairs, meta = (AllowPrivateAccess = "true"))
-	float CrosshairVelocityFactor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"))
+		float CrosshairVelocityFactor;
 
 	/*in air component for crosshair spread*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Crosshairs, meta = (AllowPrivateAccess = "true"))
-	float CrosshairInAirFactor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"))
+		float CrosshairInAirFactor;
 
 	/*Aim component for crosshair spread*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Crosshairs, meta = (AllowPrivateAccess = "true"))
-	float CrosshairAimFactor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"))
+		float CrosshairAimFactor;
 
 	/*Shooting component for crosshair spread*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Crosshairs, meta = (AllowPrivateAccess = "true"))
-	float CrosshairShootingFactor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"))
+		float CrosshairShootingFactor;
 
 	float ShootTimeDuration;
 
@@ -248,40 +251,40 @@ private:
 	int8 OverlappedItemCount;
 
 	/*AItem hit last frame*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Items, meta = (AllowPrivateAccess = "true"))
-	class AItem* TraceHitItemLastFrame;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+		class AItem* TraceHitItemLastFrame;
 
 	/*Currently equipped weapon*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Combat, meta = (AllowPrivateAccess = "true"))
-	class AWeapon* EquippedWeapon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+		class AWeapon* EquippedWeapon;
 
 	/** Set this in Blueprints for the default Weapon class */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AWeapon> DefaultWeaponClass;
+		TSubclassOf<AWeapon> DefaultWeaponClass;
 
 	/*The item currently hit by our trace in TraceForItems*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	AItem* TraceHitItem;
+		AItem* TraceHitItem;
 
 	/*Distance outward from the camera for interp distance*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Items, meta = (AllowPrivateAccess = "true"))
-	float CameraInterpDistance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+		float CameraInterpDistance;
 
 	/*Distance up from the camera for interp distance*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Items, meta = (AllowPrivateAccess = "true"))
-	float CameraInterpElevation;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+		float CameraInterpElevation;
 
 	/*Map to keep track of ammo types*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Items, meta = (AllowPrivateAccess = "true"))
-	TMap<EAmmoType, int32> AmmoMap;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+		TMap<EAmmoType, int32> AmmoMap;
 
 	/*Starting amount of 9mm ammo*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Items, meta = (AllowPrivateAccess = "true"))
-	int32 Starting9mmAmmo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Items, meta = (AllowPrivateAccess = "true"))
+		int32 Starting9mmAmmo;
 
 	/*Starting amount of AR ammo*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Items, meta = (AllowPrivateAccess = "true"))
-	int32 StartingARAmmo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Items, meta = (AllowPrivateAccess = "true"))
+		int32 StartingARAmmo;
 public:
 	/*Returns camera boom subobject*/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -290,13 +293,13 @@ public:
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	/*Returns bAiming to be used in the anim instance*/
-	FORCEINLINE bool GetAiming() const {return bAiming;}
+	FORCEINLINE bool GetAiming() const { return bAiming; }
 
 	/*Returns bAiming to be used in the anim instance*/
 	UFUNCTION(BlueprintCallable)
-	float GetCrosshairSpreadMultiplier();
+		float GetCrosshairSpreadMultiplier();
 
-	FORCEINLINE int8 GetOverlappedItemCounts() const {return OverlappedItemCount;}
+	FORCEINLINE int8 GetOverlappedItemCounts() const { return OverlappedItemCount; }
 
 	/*Add/Subtract overlapped item count and updates bShouldTraceForItems*/
 	void IncrementOverlappedItemCount(int8 amount);

@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ShooterCharacter.h"
 
 #include "DrawDebugHelpers.h"
@@ -16,39 +15,39 @@
 #include "Sound/SoundCue.h"
 
 // Sets default values
-AShooterCharacter::AShooterCharacter():
-BaseTurnRate(45.f),
-BaseLookUpRate(45.f),
-bAiming(false),
-CameraDefaultFOV(0.f),
-CameraZoomedFOV(35.f),
-ZoomInterpSpeed(20.f),
-CameraCurrentFOV(0.f),
-HipTurnRate(90.f),
-HipLookUpRate(90.f),
-AimTurnRate(20.f),
-AimLookUpRate(20.f),
-MouseHipTurnRate(1.0f),
-MouseHipLookUpRate(1.0f),
-MouseAimTurnRate(0.2f),
-MouseAimLookUpRate(0.2f),
-CrosshairSpreadMultiplier(0.f),
-CrosshairVelocityFactor(0.f),
-CrosshairInAirFactor(0.f),
-CrosshairAimFactor(0.f),
-CrosshairShootingFactor(0.f),
-ShootTimeDuration(0.05f),
-bFiringBullet(false),
-AutomaticFireRate(0.1f),
-bShouldFire(true),
-bFireButtonPressed(false),
-bShouldTraceForItems(false),
-CameraInterpDistance(250.f),
-CameraInterpElevation(65.f),
-Starting9mmAmmo(85),
-StartingARAmmo(125)
+AShooterCharacter::AShooterCharacter() :
+	BaseTurnRate(45.f),
+	BaseLookUpRate(45.f),
+	bAiming(false),
+	CameraDefaultFOV(0.f),
+	CameraZoomedFOV(35.f),
+	ZoomInterpSpeed(20.f),
+	CameraCurrentFOV(0.f),
+	HipTurnRate(90.f),
+	HipLookUpRate(90.f),
+	AimTurnRate(20.f),
+	AimLookUpRate(20.f),
+	MouseHipTurnRate(1.0f),
+	MouseHipLookUpRate(1.0f),
+	MouseAimTurnRate(0.2f),
+	MouseAimLookUpRate(0.2f),
+	CrosshairSpreadMultiplier(0.f),
+	CrosshairVelocityFactor(0.f),
+	CrosshairInAirFactor(0.f),
+	CrosshairAimFactor(0.f),
+	CrosshairShootingFactor(0.f),
+	ShootTimeDuration(0.05f),
+	bFiringBullet(false),
+	AutomaticFireRate(0.1f),
+	bShouldFire(true),
+	bFireButtonPressed(false),
+	bShouldTraceForItems(false),
+	CameraInterpDistance(250.f),
+	CameraInterpElevation(65.f),
+	Starting9mmAmmo(85),
+	StartingARAmmo(125)
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	/*Create a camera boom*/
@@ -84,7 +83,7 @@ void AShooterCharacter::BeginPlay()
 		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
 		CameraCurrentFOV = CameraDefaultFOV;
 	}
-	
+
 	//Spawn and equip default weapon
 	EquipWeapon(SpawnDefaultWeapon());
 
@@ -97,10 +96,10 @@ void AShooterCharacter::MoveForward(float value)
 	if ((Controller != nullptr) && value != 0)
 	{
 		//Check forward rotation
-		const FRotator Rotation {Controller->GetControlRotation()};
-		const FRotator YawRotation {0, Rotation.Yaw, 0};
+		const FRotator Rotation{ Controller->GetControlRotation() };
+		const FRotator YawRotation{ 0, Rotation.Yaw, 0 };
 
-		const FVector Direction{ FRotationMatrix{YawRotation}.GetUnitAxis(EAxis::X)};
+		const FVector Direction{ FRotationMatrix{YawRotation}.GetUnitAxis(EAxis::X) };
 		AddMovementInput(Direction, value);
 	}
 }
@@ -110,10 +109,10 @@ void AShooterCharacter::MoveRight(float value)
 	if ((Controller != nullptr) && value != 0)
 	{
 		//Check forward rotation
-		const FRotator Rotation {Controller->GetControlRotation()};
-		const FRotator YawRotation {0, Rotation.Yaw, 0};
+		const FRotator Rotation{ Controller->GetControlRotation() };
+		const FRotator YawRotation{ 0, Rotation.Yaw, 0 };
 
-		const FVector Direction{ FRotationMatrix{YawRotation}.GetUnitAxis(EAxis::Y)};
+		const FVector Direction{ FRotationMatrix{YawRotation}.GetUnitAxis(EAxis::Y) };
 		AddMovementInput(Direction, value);
 	}
 }
@@ -200,7 +199,7 @@ void AShooterCharacter::FireWeapon()
 			}
 		}
 	}
-		
+
 	/*Play Shooting Animation*/
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && HipFireMontage)
@@ -208,15 +207,21 @@ void AShooterCharacter::FireWeapon()
 		AnimInstance->Montage_Play(HipFireMontage);
 		AnimInstance->Montage_JumpToSection(FName("StartFire"));
 	}
+
+	//Subtract weapon ammo
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->DecrementAmmo();
+	}
 	
 	//Start Bullet fire timer for crosshairs
 	StartCrosshairBulletFire();
 }
 
-	bool AShooterCharacter::GetBeamEndLocation(
-		const FVector& MuzzleSocketLocation, 
-		FVector& OutBeamLocation)
-	{
+bool AShooterCharacter::GetBeamEndLocation(
+	const FVector& MuzzleSocketLocation,
+	FVector& OutBeamLocation)
+{
 	// Check for crosshair trace hit
 	FHitResult CrosshairHitResult;
 	bool bCrosshairHit = TraceUnderCrosshairs(CrosshairHitResult, OutBeamLocation);
@@ -227,9 +232,9 @@ void AShooterCharacter::FireWeapon()
 		OutBeamLocation = CrosshairHitResult.Location;
 	}
 	else // no crosshair trace hit
-		{
+	{
 		// OutBeamLocation is the End location for the line trace
-		}
+	}
 
 	// Perform a second trace, this time from the gun barrel
 	FHitResult WeaponTraceHit;
@@ -242,13 +247,13 @@ void AShooterCharacter::FireWeapon()
 		WeaponTraceEnd,
 		ECollisionChannel::ECC_Visibility);
 	if (WeaponTraceHit.bBlockingHit) // object between barrel and BeamEndPoint?
-		{
+	{
 		OutBeamLocation = WeaponTraceHit.Location;
 		return true;
-		}
+	}
 
 	return false;
-	}
+}
 
 void AShooterCharacter::AimingButtonPressed()
 {
@@ -293,14 +298,14 @@ void AShooterCharacter::SetLookRate()
 void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 {
 	//Calculate Velocity Factor
-	FVector2D WalkSpeedRange{0.f, 600.f};
-	FVector2D VelocityMultiplierRange {0.1f, 1.0f};
-	FVector Velocity{GetVelocity()};
+	FVector2D WalkSpeedRange{ 0.f, 600.f };
+	FVector2D VelocityMultiplierRange{ 0.1f, 1.0f };
+	FVector Velocity{ GetVelocity() };
 	Velocity.Z = 0;
 	CrosshairVelocityFactor = FMath::GetMappedRangeValueClamped(
 		WalkSpeedRange, VelocityMultiplierRange, Velocity.Size()
-		);
-	
+	);
+
 	//Calculcate In Air Factor
 	if (GetCharacterMovement()->IsFalling()) //Is In Air
 	{
@@ -312,7 +317,7 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 		//Shrink crosshairs rapidly while on ground
 		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 0, DeltaTime, 30.f);
 	}
-	
+
 	//Calculate Aim Factor
 	if (bAiming) //Is Aiming
 	{
@@ -324,7 +329,7 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 		//Expand crosshairs a small amount very quickly
 		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
 	}
-	
+
 	//Calcuate Fire Factor
 	if (bFiringBullet) //True for 0.05 seconds after firing
 	{
@@ -357,8 +362,11 @@ void AShooterCharacter::FinishCrosshairBulletFire()
 
 void AShooterCharacter::FireButtonPressed()
 {
-	bFireButtonPressed = true;
-	StartFireTimer();
+	if (WeaponHasAmmo())
+	{
+		bFireButtonPressed = true;
+		StartFireTimer();
+	}
 }
 
 void AShooterCharacter::FireButtonReleased()
@@ -378,10 +386,13 @@ void AShooterCharacter::StartFireTimer()
 
 void AShooterCharacter::AutoFireReset()
 {
-	bShouldFire = true;
-	if (bFireButtonPressed)
+	if (WeaponHasAmmo())
 	{
-		StartFireTimer();
+		bShouldFire = true;
+		if (bFireButtonPressed)
+		{
+			StartFireTimer();
+		}
 	}
 }
 
@@ -451,7 +462,7 @@ void AShooterCharacter::TraceForItems()
 			TraceHitItemLastFrame = TraceHitItem;
 		}
 	}
-	else if(TraceHitItemLastFrame)
+	else if (TraceHitItemLastFrame)
 	{
 		TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
 	}
@@ -507,7 +518,6 @@ void AShooterCharacter::SelectButtonPressed()
 
 void AShooterCharacter::SelectButtonReleased()
 {
-
 }
 
 void AShooterCharacter::SwapWeapon(AWeapon* WeaponToSwap)
@@ -522,6 +532,15 @@ void AShooterCharacter::InitializeAmmoMap()
 {
 	AmmoMap.Add(EAmmoType::EAT_9mm, Starting9mmAmmo);
 	AmmoMap.Add(EAmmoType::EAT_AR, StartingARAmmo);
+}
+
+bool AShooterCharacter::WeaponHasAmmo()
+{
+	if (EquippedWeapon == nullptr)
+	{
+		return false;
+	}
+	return EquippedWeapon->GetAmmo() > 0;
 }
 
 // Called every frame
@@ -585,8 +604,8 @@ void AShooterCharacter::IncrementOverlappedItemCount(int8 amount)
 
 FVector AShooterCharacter::GetCameraInterpLocation()
 {
-	const FVector CameraWorldLocation{FollowCamera->GetComponentLocation()};
-	const FVector CameraForward{FollowCamera->GetForwardVector()};
+	const FVector CameraWorldLocation{ FollowCamera->GetComponentLocation() };
+	const FVector CameraForward{ FollowCamera->GetForwardVector() };
 	return CameraWorldLocation + CameraForward * CameraInterpDistance + FVector(0.f, 0.f, CameraInterpElevation);
 }
 
@@ -598,4 +617,3 @@ void AShooterCharacter::GetPickupItem(AItem* Item)
 		SwapWeapon(Weapon);
 	}
 }
-
