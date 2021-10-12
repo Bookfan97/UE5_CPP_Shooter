@@ -45,7 +45,8 @@ AShooterCharacter::AShooterCharacter() :
 	CameraInterpDistance(250.f),
 	CameraInterpElevation(65.f),
 	Starting9mmAmmo(85),
-	StartingARAmmo(125)
+	StartingARAmmo(125),
+	CombatState(ECombatState::ECS_Unoccupied)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -157,19 +158,17 @@ void AShooterCharacter::LookUp(float value)
 	AddControllerPitchInput(value * lookUpScaleFactor);
 }
 
-void AShooterCharacter::FireWeapon()
+void AShooterCharacter::PlayFireSound()
 {
-	if (EquippedWeapon == nullptr)
-	{
-		return;
-	}
-	
 	/*Play Fire Sound Effect*/
 	if (FireSound)
 	{
 		UGameplayStatics::PlaySound2D(this, FireSound);
 	}
+}
 
+void AShooterCharacter::SendBullet()
+{
 	/*Bullet Particle Effect*/
 	const USkeletalMeshSocket* BarrelSocket = EquippedWeapon->GetItemMesh()->GetSocketByName("BarrelSocket");
 	if (BarrelSocket)
@@ -204,7 +203,10 @@ void AShooterCharacter::FireWeapon()
 			}
 		}
 	}
+}
 
+void AShooterCharacter::PlayGunFireMontage()
+{
 	/*Play Shooting Animation*/
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && HipFireMontage)
@@ -212,15 +214,30 @@ void AShooterCharacter::FireWeapon()
 		AnimInstance->Montage_Play(HipFireMontage);
 		AnimInstance->Montage_JumpToSection(FName("StartFire"));
 	}
+}
 
-	//Subtract weapon ammo
-	if (EquippedWeapon)
+void AShooterCharacter::FireWeapon()
+{
+	if (EquippedWeapon == nullptr)
 	{
-		EquippedWeapon->DecrementAmmo();
+		return;
 	}
-	
-	//Start Bullet fire timer for crosshairs
-	StartCrosshairBulletFire();
+
+	if (CombatState != ECombatState::ECS_Unoccupied)
+	{
+		return;
+	}
+
+	if (WeaponHasAmmo())
+	{
+		PlayFireSound();
+		SendBullet();
+		PlayGunFireMontage();
+		EquippedWeapon->DecrementAmmo();
+		StartFireTimer();
+		//Start Bullet fire timer for crosshairs
+		StartCrosshairBulletFire();
+	}
 }
 
 bool AShooterCharacter::GetBeamEndLocation(
@@ -367,11 +384,8 @@ void AShooterCharacter::FinishCrosshairBulletFire()
 
 void AShooterCharacter::FireButtonPressed()
 {
-	if (WeaponHasAmmo())
-	{
-		bFireButtonPressed = true;
-		StartFireTimer();
-	}
+	bFireButtonPressed = true;
+	FireWeapon();
 }
 
 void AShooterCharacter::FireButtonReleased()
@@ -381,23 +395,24 @@ void AShooterCharacter::FireButtonReleased()
 
 void AShooterCharacter::StartFireTimer()
 {
-	if (bShouldFire)
-	{
-		FireWeapon();
-		bShouldFire = false;
-		GetWorldTimerManager().SetTimer(AutoFireTimer, this, &AShooterCharacter::AutoFireReset, AutomaticFireRate);
-	}
+	CombatState = ECombatState::ECS_FireTimerInProgress;
+	GetWorldTimerManager().SetTimer(AutoFireTimer, this, &AShooterCharacter::AutoFireReset, AutomaticFireRate);
 }
 
 void AShooterCharacter::AutoFireReset()
 {
+	CombatState = ECombatState::ECS_Unoccupied;
+	
 	if (WeaponHasAmmo())
 	{
-		bShouldFire = true;
 		if (bFireButtonPressed)
 		{
-			StartFireTimer();
+			FireWeapon();
 		}
+	}
+	else
+	{
+		//Reload
 	}
 }
 
