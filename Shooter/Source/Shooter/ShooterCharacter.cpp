@@ -216,6 +216,50 @@ void AShooterCharacter::PlayGunFireMontage()
 	}
 }
 
+bool AShooterCharacter::CarryingAmmo()
+{
+	if (EquippedWeapon == nullptr)
+	{
+		return false;
+	}
+
+	auto AmmoType = EquippedWeapon->GetAmmoType();
+	if (AmmoMap.Contains(AmmoType))
+	{
+		return AmmoMap[AmmoType] <= 0;
+	}
+	return false;
+}
+
+void AShooterCharacter::ReloadWeapon()
+{
+	if (CombatState != ECombatState::ECS_Unoccupied)
+	{
+		return;
+	}
+
+	if (EquippedWeapon == nullptr)
+	{
+		return;
+	}
+
+	if (CarryingAmmo())
+	{
+		CombatState = ECombatState::ECS_Reloading;
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (ReloadMontage && AnimInstance)
+		{
+			AnimInstance->Montage_Play(ReloadMontage);
+			AnimInstance->Montage_JumpToSection(EquippedWeapon->GetReloadMontageSection());
+		}
+	}
+}
+
+void AShooterCharacter::ReloadButtonPressed()
+{
+	ReloadWeapon();
+}
+
 void AShooterCharacter::FireWeapon()
 {
 	if (EquippedWeapon == nullptr)
@@ -402,7 +446,7 @@ void AShooterCharacter::StartFireTimer()
 void AShooterCharacter::AutoFireReset()
 {
 	CombatState = ECombatState::ECS_Unoccupied;
-	
+
 	if (WeaponHasAmmo())
 	{
 		if (bFireButtonPressed)
@@ -412,7 +456,7 @@ void AShooterCharacter::AutoFireReset()
 	}
 	else
 	{
-		//Reload
+		ReloadWeapon();
 	}
 }
 
@@ -601,6 +645,36 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("AimingButton", IE_Released, this, &AShooterCharacter::AimingButtonReleased);
 	PlayerInputComponent->BindAction("Select", IE_Pressed, this, &AShooterCharacter::SelectButtonPressed);
 	PlayerInputComponent->BindAction("Select", IE_Released, this, &AShooterCharacter::SelectButtonReleased);
+	PlayerInputComponent->BindAction("ReloadButton", IE_Pressed, this, &AShooterCharacter::ReloadButtonPressed);
+}
+
+void AShooterCharacter::FinishReloading()
+{
+	CombatState = ECombatState::ECS_Unoccupied;
+
+	//Update the ammo map
+	if (EquippedWeapon == nullptr)
+	{
+		return;
+	}
+	const auto AmmoType = EquippedWeapon->GetAmmoType();
+	if (AmmoMap.Contains(AmmoType))
+	{
+		int32 carriedAmmo = AmmoMap[AmmoType];
+		const int32 magEmptySpace = EquippedWeapon->GetMagazineCapacity() - EquippedWeapon->GetAmmo();
+		if (magEmptySpace > carriedAmmo)
+		{
+			EquippedWeapon->ReloadAmmo(carriedAmmo);
+			carriedAmmo = 0;
+			AmmoMap.Add(AmmoType, carriedAmmo);
+		}
+		else
+		{
+			EquippedWeapon->ReloadAmmo(magEmptySpace);
+			carriedAmmo -= magEmptySpace;
+			AmmoMap.Add(AmmoType, carriedAmmo);
+		}
+	}
 }
 
 float AShooterCharacter::GetCrosshairSpreadMultiplier()

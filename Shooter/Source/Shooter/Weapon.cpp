@@ -5,7 +5,11 @@
 AWeapon::AWeapon() :
 	ThrowWeaponTime(0.7f),
 	bFalling(false),
-	ammo(0)
+	ammo(30),
+	MagazineCapacity(30),
+	WeaponType(EWeaponType::EWT_SubmachineGun),
+	AmmoType(EAmmoType::EAT_9mm),
+	ReloadMontageSection(FName(TEXT("ReloadSMG")))
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -47,7 +51,7 @@ void AWeapon::ThrowWeapon()
 
 void AWeapon::DecrementAmmo()
 {
-	if (ammo -1 <=0)
+	if (ammo - 1 <= 0)
 	{
 		ammo = 0;
 	}
@@ -55,6 +59,12 @@ void AWeapon::DecrementAmmo()
 	{
 		ammo--;
 	}
+}
+
+void AWeapon::ReloadAmmo(int32 amount)
+{
+	checkf(ammo + amount <= MagazineCapacity, TEXT("ATTEMPTED TO RELOAD WITH MORE THAN MAGAZINE CAPACITY"));
+	ammo += amount;
 }
 
 void AWeapon::StopFalling()
